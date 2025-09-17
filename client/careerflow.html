@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Career Flow</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <h2>Your Career Path</h2>
+  <textarea id="scoreInput" placeholder="Enter your quiz score (%)"></textarea><br>
+  <button id="analyzeBtn">Analyze Career</button>
+
+  <h3>AI Analysis</h3>
+  <pre id="analysisOutput"></pre>
+
+  <h3>Career Flowchart</h3>
+  <div class="mermaid" id="flowchart">
+    %% Flowchart will be inserted here
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/careerflow.js"></script>
+</body>
+</html>
