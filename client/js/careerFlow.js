@@ -6,15 +6,36 @@ function getStoredPercentage(){
 async function analyze(score){
   const res = await apiRequest("/career/analysis", "POST", { score });
   document.getElementById("analysisOutput").innerText = res.analysis;
-  document.getElementById("flowchart").innerText = `
-    graph TD
-    A[Now] --> B[Skill Building]
-    B --> C[Projects]
-    C --> D[Internships]
-    D --> E[Certifications]
-    E --> F[Job/Admissions]
-  `;
-  mermaid.init(undefined, document.querySelectorAll(".mermaid"));
+  
+  // Generate AI flowchart
+  try {
+    const flowchartRes = await apiRequest("/llm/chat", "POST", { 
+      message: `Create a Mermaid flowchart for career progression starting from current student status with score ${score}%. Include steps like skill building, projects, internships, certifications, and job opportunities. Return only the Mermaid code starting with "graph TD" or "flowchart TD".`
+    });
+    
+    const flowchartCode = flowchartRes.reply || `
+      graph TD
+      A[Now] --> B[Skill Building]
+      B --> C[Projects]
+      C --> D[Internships]
+      D --> E[Certifications]
+      E --> F[Job/Admissions]
+    `;
+    
+    document.getElementById("flowchart").innerText = flowchartCode;
+    mermaid.init(undefined, document.querySelectorAll(".mermaid"));
+  } catch (err) {
+    // Fallback flowchart if LLM fails
+    document.getElementById("flowchart").innerText = `
+      graph TD
+      A[Now] --> B[Skill Building]
+      B --> C[Projects]
+      C --> D[Internships]
+      D --> E[Certifications]
+      E --> F[Job/Admissions]
+    `;
+    mermaid.init(undefined, document.querySelectorAll(".mermaid"));
+  }
 }
 
 const btn = document.getElementById("analyzeBtn");
