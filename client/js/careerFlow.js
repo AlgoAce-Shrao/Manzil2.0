@@ -3,14 +3,86 @@ function getStoredPercentage(){
   return v ? Number(v) : null;
 }
 
-async function analyze(score){
-  const res = await apiRequest("/career/analysis", "POST", { score });
-  document.getElementById("analysisOutput").innerText = res.analysis;
+function getStoredAnalysis(){
+  const v = localStorage.getItem('quizAnalysis');
+  return v ? JSON.parse(v) : null;
+}
+
+function getRecommendedStream(){
+  return localStorage.getItem('recommendedStream') || 'General';
+}
+
+async function analyze(){
+  const storedAnswers = localStorage.getItem('quizAnswers');
+  const storedPercentage = getStoredPercentage();
   
-  // Generate AI flowchart
+  if (!storedAnswers && !storedPercentage) {
+    // No quiz data available
+    document.getElementById("loadingSection").style.display = "none";
+    document.getElementById("errorSection").style.display = "block";
+    return;
+  }
+
+  // Show loading animation
+  let progress = 0;
+  const progressBar = document.getElementById("progressBar");
+  const progressInterval = setInterval(() => {
+    progress += Math.random() * 15;
+    if (progress > 90) progress = 90;
+    progressBar.style.width = progress + "%";
+  }, 200);
+
   try {
+    let analysisText = "";
+    
+    if (storedAnswers) {
+      // Send answers for detailed career trajectory analysis
+      const res = await apiRequest("/career/trajectory", "POST", { answers: JSON.parse(storedAnswers) });
+      analysisText = res.analysis;
+    } else {
+      // Fallback to stored analysis
+      const storedAnalysis = getStoredAnalysis();
+      if (storedAnalysis) {
+        analysisText = storedAnalysis;
+      } else {
+        const res = await apiRequest("/career/analysis", "POST", { score: storedPercentage || 75 });
+        analysisText = res.analysis;
+      }
+    }
+    
+    // Complete progress bar
+    clearInterval(progressInterval);
+    progressBar.style.width = "100%";
+    
+    // Wait a moment for smooth transition
+    setTimeout(() => {
+      document.getElementById("loadingSection").style.display = "none";
+      document.getElementById("resultsSection").style.display = "block";
+      
+      // Update UI elements
+      document.getElementById("analysisOutput").innerText = analysisText;
+      document.getElementById("recommendedStream").innerText = getRecommendedStream();
+      document.getElementById("compatibilityScore").innerText = (storedPercentage || 75) + "%";
+      
+      // Generate flowchart
+      generateFlowchart();
+    }, 500);
+    
+  } catch (error) {
+    clearInterval(progressInterval);
+    console.error('Analysis failed:', error);
+    document.getElementById("loadingSection").style.display = "none";
+    document.getElementById("errorSection").style.display = "block";
+  }
+}
+
+async function generateFlowchart(){
+  try {
+    const recommendedStream = getRecommendedStream();
+    const score = getStoredPercentage() || 75;
+    
     const flowchartRes = await apiRequest("/llm/chat", "POST", { 
-      message: `Create a Mermaid flowchart for career progression starting from current student status with score ${score}%. Include steps like skill building, projects, internships, certifications, and job opportunities. Return only the Mermaid code starting with "graph TD" or "flowchart TD".`
+      message: `Create a Mermaid flowchart for career progression in ${recommendedStream} field for a student with score ${score}%. Focus on less competitive paths and alternative routes. Include steps like skill building, projects, internships, certifications, and job opportunities. Return only the Mermaid code starting with "graph TD" or "flowchart TD".`
     });
     
     const flowchartCode = flowchartRes.reply || `
@@ -38,15 +110,7 @@ async function analyze(score){
   }
 }
 
-const btn = document.getElementById("analyzeBtn");
-btn.addEventListener("click", async () => {
-  const score = Number(document.getElementById("scoreInput").value || 0);
-  await analyze(score);
+// Auto-start analysis when page loads
+document.addEventListener('DOMContentLoaded', () => {
+  analyze();
 });
-
-// Auto-fill from quiz
-const stored = getStoredPercentage();
-if (stored !== null) {
-  document.getElementById("scoreInput").value = String(stored);
-  analyze(stored);
-}

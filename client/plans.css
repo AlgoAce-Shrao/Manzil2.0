@@ -1,0 +1,112 @@
+/* Reset some default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+  }
+  
+  /* Body and background */
+  body {
+    background-color: #0d1b3d; /* Dark blue background */
+    color: #fff;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  
+  /* Home button */
+  .home-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #0099cc; /* Slightly darker sky blue */
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    transition: background-color 0.3s;
+  }
+  
+  .home-btn:hover {
+    background-color: #0077aa;
+  }
+  
+  /* Plans container */
+  .plans-container {
+    text-align: center;
+  }
+  
+  /* Plans heading */
+  .plans-container h1 {
+    font-size: 36px;
+    margin-bottom: 30px;
+    color: #fff;
+  }
+  
+  /* Cards container */
+  .plans-cards {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+  }
+  
+  /* Individual plan card */
+  .plan-card {
+    background-color: #1e3a8a; /* Light blue */
+    color: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    width: 280px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .plan-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4);
+  }
+  
+  /* Plan title */
+  .plan-card h2 {
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+  
+  /* Feature list */
+  .plan-card ul {
+    text-align: left;
+    margin-bottom: 20px;
+    list-style: disc;
+    padding-left: 20px;
+  }
+  
+  /* Price */
+  .plan-card .price {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  /* Button container for single-line alignment */
+  .plan-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  /* Plan buttons */
+  .plan-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #0099cc; /* Slightly darker sky blue */
+    color: #fff;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+  
+  .plan-btn:hover {
+    background-color: #0077aa;
+  }

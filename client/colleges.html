@@ -4,19 +4,28 @@
   <title>College Directory</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+      * {
+        font-family: "Poppins", sans-serif;
+        text-decoration: none;
+        list-style: none;
+      }
+  </style>
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
-<body>
-  <h2>Nearby Colleges</h2>
+<body style="background: #0a1326;">
+  <h2 style="color: #5c77b9;">Nearby Colleges</h2>
   <div id="aiSuggest" style="margin-bottom:8px;">
     <span id="recommendedStream" style="opacity:0.9;"></span>
   </div>
   <div>
-    <input type="text" id="streamInput" placeholder="Filter by stream (e.g., Computer Science)" />
+    <input style="border-color: #5c77b9;"   type="text" id="streamInput" placeholder="Filter by stream (e.g., Computer Science)" />
     <label>
       <input type="checkbox" id="onlyGovt" checked /> Government only
     </label>
-    <button id="findColleges">Find Nearby Colleges</button>
+    <button id="findColleges" style="background: #5c77b9;" >Find Nearby Colleges</button>
   </div>
   <div style="display:flex; gap:16px; margin-top:12px;">
     <div id="map" style="height:500px; flex: 2 1 70%;"></div>

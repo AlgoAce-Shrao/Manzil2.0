@@ -1,24 +1,92 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Career Flow</title>
+  <title>Career Flow - Manzil</title>
   <link rel="stylesheet" href="css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
 </head>
 <body>
-  <h2>Your Career Path</h2>
-  <textarea id="scoreInput" placeholder="Enter your quiz score (%)"></textarea><br>
-  <button id="analyzeBtn">Analyze Career</button>
+  <header>
+    <h1>Manzil2</h1>
+    <nav>
+      <a href="index.html">Dashboard</a>
+      <a href="colleges.html">Colleges</a>
+    </nav>
+  </header>
 
-  <h3>AI Analysis</h3>
-  <pre id="analysisOutput"></pre>
+  <main>
+    <div id="loadingSection" style="text-align: center; padding: 40px;">
+      <div style="font-size: 24px; color: var(--neon-cyan); margin-bottom: 20px;">🔍</div>
+      <h2>Analyzing Your Career Path...</h2>
+      <p>Our AI is processing your quiz responses to create a personalized career roadmap.</p>
+      <div style="margin-top: 20px;">
+        <div style="width: 100%; height: 4px; background: var(--bg-card); border-radius: 2px; overflow: hidden;">
+          <div id="progressBar" style="height: 100%; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); width: 0%; transition: width 2s ease;"></div>
+        </div>
+      </div>
+    </div>
 
-  <h3>Career Flowchart</h3>
-  <div class="mermaid" id="flowchart">
-    %% Flowchart will be inserted here
+    <div id="resultsSection" style="display: none;">
+      <h2>Your Personalized Career Analysis</h2>
+      
+      <div style="display: flex; gap: 20px; margin-bottom: 30px;">
+        <div style="flex: 1; background: var(--bg-card); padding: 20px; border-radius: 12px; border-left: 4px solid var(--neon-cyan);">
+          <h3 style="color: var(--neon-cyan); margin-bottom: 10px;">🎯 Recommended Stream</h3>
+          <div id="recommendedStream" style="font-size: 18px; font-weight: bold; color: var(--text-light);">Loading...</div>
+        </div>
+        <div style="flex: 1; background: var(--bg-card); padding: 20px; border-radius: 12px; border-left: 4px solid var(--neon-purple);">
+          <h3 style="color: var(--neon-purple); margin-bottom: 10px;">📊 Compatibility Score</h3>
+          <div id="compatibilityScore" style="font-size: 18px; font-weight: bold; color: var(--text-light);">Loading...</div>
+        </div>
+      </div>
+
+      <div style="background: var(--bg-card); padding: 25px; border-radius: 12px; margin-bottom: 30px;">
+        <h3 style="color: var(--neon-cyan); margin-bottom: 15px;">🧠 AI Career Analysis</h3>
+        <div id="analysisOutput" style="line-height: 1.6; white-space: pre-wrap; max-height: 400px; overflow-y: auto; padding: 15px; background: var(--bg-dark); border-radius: 8px; border: 1px solid var(--neon-cyan);"></div>
+      </div>
+
+      <div style="background: var(--bg-card); padding: 25px; border-radius: 12px;">
+        <h3 style="color: var(--neon-purple); margin-bottom: 15px;">🗺️ Career Progression Flowchart</h3>
+        <div class="mermaid" id="flowchart" style="background: var(--bg-dark); border-radius: 8px; padding: 20px; border: 1px solid var(--neon-purple);">
+          %% Flowchart will be generated here
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 30px;">
+        <a href="colleges.html" style="display: inline-block; padding: 12px 24px; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); color: white; text-decoration: none; border-radius: 30px; font-weight: bold; margin-right: 15px;">Find Colleges</a>
+        <a href="quiz.html" style="display: inline-block; padding: 12px 24px; background: var(--bg-card); color: var(--text-light); text-decoration: none; border-radius: 30px; font-weight: bold; border: 1px solid var(--neon-cyan);">Retake Quiz</a>
+      </div>
+    </div>
+
+    <div id="errorSection" style="display: none; text-align: center; padding: 40px;">
+      <div style="font-size: 48px; color: var(--accent); margin-bottom: 20px;">⚠️</div>
+      <h2>Unable to Generate Analysis</h2>
+      <p>Please complete the quiz first to get your personalized career analysis.</p>
+      <a href="quiz.html" style="display: inline-block; padding: 12px 24px; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); color: white; text-decoration: none; border-radius: 30px; font-weight: bold; margin-top: 20px;">Take Quiz</a>
+    </div>
+  </main>
+
+  <!-- Floating Chatbot -->
+  <div id="chatbotContainer" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+    <!-- Chat Window (hidden by default) -->
+    <div id="chatWindow" style="display: none; width: 350px; height: 400px; background: var(--bg-card); border-radius: 12px; box-shadow: 0 0 20px rgba(0, 247, 255, 0.3); margin-bottom: 10px; flex-direction: column;">
+      <div style="padding: 15px; border-bottom: 1px solid var(--neon-cyan); display: flex; justify-content: space-between; align-items: center;">
+        <h4 style="margin: 0; color: var(--neon-cyan);">AI Career Assistant</h4>
+        <button id="closeChat" style="background: none; border: none; color: var(--text-light); font-size: 20px; cursor: pointer;">×</button>
+      </div>
+      <div id="chatbox" style="flex: 1; padding: 15px; overflow-y: auto; max-height: 280px;"></div>
+      <div style="padding: 15px; border-top: 1px solid var(--neon-cyan); display: flex; gap: 10px;">
+        <input type="text" id="chatInput" placeholder="Type your question..." style="flex: 1; padding: 8px; border: 1px solid var(--neon-cyan); border-radius: 8px; background: #0d1117; color: var(--text-light);">
+        <button id="sendBtn" style="padding: 8px 16px; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); border: none; border-radius: 8px; color: white; cursor: pointer;">Send</button>
+      </div>
+    </div>
+    
+    <!-- Floating Chat Button -->
+    <button id="chatToggle" style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple)); border: none; color: white; font-size: 24px; cursor: pointer; box-shadow: 0 0 15px rgba(0, 247, 255, 0.5); display: flex; align-items: center; justify-content: center;">💬</button>
   </div>
 
   <script src="js/api.js"></script>
   <script src="js/careerflow.js"></script>
+  <script src="js/chatbot.js"></script>
 </body>
 </html>

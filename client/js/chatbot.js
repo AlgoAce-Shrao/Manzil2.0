@@ -10,8 +10,14 @@ async function sendChatMessage(text) {
   const chatWindow = document.getElementById('chatWindow');
   const chatToggle = document.getElementById('chatToggle');
   const closeChat = document.getElementById('closeChat');
+  const minimizeChat = document.getElementById('minimizeChat');
+  const maximizeChat = document.getElementById('maximizeChat');
   
   if (!input || !btn || !box || !chatWindow || !chatToggle) return;
+
+  let isMinimized = false;
+  let isMaximized = false;
+  let originalSize = { width: '350px', height: '400px' };
 
   function append(role, text) {
     const messageDiv = document.createElement('div');
@@ -63,12 +69,61 @@ async function sendChatMessage(text) {
 
   // Toggle chat window
   chatToggle.addEventListener('click', () => {
-    chatWindow.style.display = chatWindow.style.display === 'none' ? 'flex' : 'none';
+    if (chatWindow.style.display === 'none') {
+      chatWindow.style.display = 'flex';
+      chatWindow.style.width = originalSize.width;
+      chatWindow.style.height = originalSize.height;
+      isMinimized = false;
+      isMaximized = false;
+    } else {
+      chatWindow.style.display = 'none';
+    }
   });
+
+  // Minimize chat window
+  if (minimizeChat) {
+    minimizeChat.addEventListener('click', () => {
+      if (!isMinimized) {
+        originalSize.width = chatWindow.style.width;
+        originalSize.height = chatWindow.style.height;
+        chatWindow.style.width = '350px';
+        chatWindow.style.height = '60px';
+        chatWindow.style.overflow = 'hidden';
+        box.style.display = 'none';
+        document.querySelector('#chatWindow > div:last-child').style.display = 'none';
+        isMinimized = true;
+        isMaximized = false;
+      }
+    });
+  }
+
+  // Maximize chat window
+  if (maximizeChat) {
+    maximizeChat.addEventListener('click', () => {
+      if (!isMaximized) {
+        originalSize.width = chatWindow.style.width;
+        originalSize.height = chatWindow.style.height;
+        chatWindow.style.width = '600px';
+        chatWindow.style.height = '700px';
+        chatWindow.style.overflow = 'hidden';
+        box.style.display = 'block';
+        document.querySelector('#chatWindow > div:last-child').style.display = 'flex';
+        isMinimized = false;
+        isMaximized = true;
+      } else {
+        // Restore to original size
+        chatWindow.style.width = originalSize.width;
+        chatWindow.style.height = originalSize.height;
+        isMaximized = false;
+      }
+    });
+  }
 
   // Close chat window
   closeChat.addEventListener('click', () => {
     chatWindow.style.display = 'none';
+    isMinimized = false;
+    isMaximized = false;
   });
 
   // Send message
